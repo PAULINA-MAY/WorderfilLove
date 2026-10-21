@@ -1,0 +1,78 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import BotonFlotante from '../components/BotonFlotante.astro';
+import IntroTemporada from '../components/IntroTemporada.astro';
+import { claveParaFecha, rangosPlanos, temporadas } from '../data/temporadas';
+import { sitio } from '../data/sitio';
+
+interface Props {
+  titulo?: string;
+  descripcion?: string;
+  actual: 'inicio' | 'productos' | 'historia';
+}
+const { titulo, descripcion = sitio.descripcion, actual } = Astro.props;
+const tituloCompleto = titulo ? `${titulo} · ${sitio.nombre}` : `${sitio.nombre} · Velas y figurillas hechas a mano`;
+
+const claves = temporadas.map((t) => t.clave);
+
+// Paleta de cada temporada y regla para ocultar el contenido de las que no tocan.
+const cssTemporadas = temporadas
+  .map((t) => `html[data-temporada="${t.clave}"]{--bg:${t.colores.bg};--ink:${t.colores.ink};--accent:${t.colores.accent}}`)
+  .join('');
+const cssSolo = claves
+  .map((c) => `html:not([data-temporada="${c}"]) [data-solo="${c}"]{display:none!important}`)
+  .join('');
+
+// Corre antes del primer pintado: elige la temporada (o la de ?temporada=) y decide la intro.
+// `claveParaFecha` es la misma función que cubren las pruebas.
+const scriptTemporada = `(function(){
+var claveParaFecha=${claveParaFecha.toString()};
+var rangos=${JSON.stringify(rangosPlanos)};
+var claves=${JSON.stringify(claves)};
+var h=document.documentElement,c=null;
+try{
+  var q=new URLSearchParams(location.search).get('temporada');
+  if(q==='auto')sessionStorage.removeItem('wl-temporada');
+  else if(claves.indexOf(q)>=0)sessionStorage.setItem('wl-temporada',q);
+  c=sessionStorage.getItem('wl-temporada');
+}catch(e){}
+if(claves.indexOf(c)<0){var d=new Date();c=claveParaFecha(rangos,d.getMonth()+1,d.getDate());}
+h.dataset.temporada=c;h.classList.add('js');
+try{if(!sessionStorage.getItem('wl-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)h.classList.add('con-intro');}catch(e){}
+})();`;
+---
+
+<!doctype html>
+<html lang="es-MX" data-temporada="general">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:locale" content="es_MX" />
+    <script is:inline set:html={scriptTemporada} />
+    <style is:inline set:html={cssTemporadas + cssSolo}></style>
+  </head>
+  <body>
+    <IntroTemporada />
+    <Navbar actual={actual} />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <BotonFlotante />
+
+    <script>
+      import { iniciarIntro } from '../scripts/intro';
+      import { iniciarRevelar } from '../scripts/revelar';
+      iniciarIntro();
+      iniciarRevelar();
+    </script>
+  </body>
+</html>

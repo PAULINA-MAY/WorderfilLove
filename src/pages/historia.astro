@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import Boton from '../components/Boton.astro';
+import IconoTemporada from '../components/IconoTemporada.astro';
+import Ilustracion from '../components/Ilustracion.astro';
+import PasoProceso from '../components/PasoProceso.astro';
+import { enlaceWhatsApp, mensajeGeneral } from '../data/sitio';
+
+const pasos = [
+  { numero: '01', titulo: 'Elegimos el aroma', descripcion: 'Mezclamos aceites esenciales pensando en cada temporada.', icono: 'aroma' },
+  { numero: '02', titulo: 'Vertimos la cera a mano', descripcion: 'Cera de soya, mecha de algodón y paciencia: cada vela reposa 48 horas.', icono: 'verter' },
+  { numero: '03', titulo: 'Moldeamos y pintamos el yeso', descripcion: 'Cada figurilla se desmolda, se lija y se pinta a pincel.', icono: 'pintar' },
+  { numero: '04', titulo: 'Empacamos cada pieza', descripcion: 'Envuelta y lista para regalar, o para quedarte con ella.', icono: 'empacar' },
+] as const;
+---
+
+<Base actual="historia" titulo="Nuestra historia">
+  <section class="contenedor flex flex-col items-center gap-6 pt-12 pb-10 text-center md:pt-24 md:pb-16">
+    <p class="nota">nuestra historia</p>
+    <h1 class="text-[44px] leading-[1.05] md:text-[72px]">
+      Todo empezó con una vela<br class="hidden md:block" />
+      <em class="text-accent"> en la mesa de la cocina</em>
+    </h1>
+    <!-- Aquí irá una foto del taller o de manos trabajando la cera. -->
+    <div class="papel relative mt-4 aspect-[8/3] w-full overflow-hidden rounded-t-[200px] rounded-b-[24px] bg-soft max-md:aspect-[4/3] max-md:rounded-t-[120px]" role="img" aria-label="Taller de Wonderful Love">
+      <Ilustracion tipo="frasco" class="absolute top-[30%] left-[24%] w-[19%] opacity-80 max-md:left-[8%] max-md:w-[34%]" />
+      <Ilustracion tipo="pilar" class="absolute top-[18%] left-[40%] w-[23%] opacity-80 max-md:left-[32%] max-md:w-[42%]" />
+      <Ilustracion tipo="figurilla" class="absolute top-[38%] left-[60%] w-[17%] opacity-80 max-md:left-[62%] max-md:w-[32%]" />
+    </div>
+  </section>
+
+  <section class="revelar contenedor grid gap-4 py-12 md:grid-cols-[420px_1fr] md:gap-24 md:py-24">
+    <div class="flex flex-col gap-3">
+      <p class="nota">Mérida, 2021</p>
+      <h2 class="text-4xl leading-[1.05] md:text-[52px]">Cómo <em>empezó</em></h2>
+    </div>
+    <div class="flex flex-col gap-5 leading-relaxed opacity-85 md:text-lg">
+      <p>
+        Wonderful Love nació en 2021 en la mesa de una cocina en Mérida. Las primeras velas fueron regalos para la
+        familia: frascos reciclados, cera de soya y aromas que nos recordaban a casa.
+      </p>
+      <p>
+        Pronto llegaron los mensajes de amigos preguntando si podíamos hacerles una para su mamá, para su altar o para
+        regalar en Navidad. Así, pedido a pedido por WhatsApp, empezamos a crear colecciones para cada temporada del año.
+      </p>
+      <p>
+        Después sumamos las figurillas de yeso, moldeadas y pintadas a mano. Hoy seguimos haciendo cada pieza en pocas
+        cantidades, con el mismo cuidado que la primera.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-soft">
+    <div class="revelar contenedor flex flex-col gap-10 py-14 md:gap-14 md:py-24">
+      <div class="flex flex-col gap-3">
+        <p class="nota">así lo hacemos</p>
+        <h2 class="text-4xl leading-[1.05] md:text-[52px]">Nuestro <em>proceso</em></h2>
+      </div>
+      <ol class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        {pasos.map((p) => <PasoProceso {...p} />)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="revelar contenedor flex flex-col items-center gap-6 py-16 text-center md:py-28">
+    <IconoTemporada tamano={40} />
+    <h2 class="text-4xl md:text-[52px]">¿Te late alguna pieza?</h2>
+    <p class="opacity-80 md:text-lg">Escríbenos y te contamos qué hay disponible esta temporada.</p>
+    <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
+      <Boton href="/productos">Ver productos</Boton>
+      <Boton href={enlaceWhatsApp(mensajeGeneral)} variante="secundario" icono="whatsapp" externo>
+        Escríbenos por WhatsApp
+      </Boton>
+    </div>
+  </section>
+</Base>

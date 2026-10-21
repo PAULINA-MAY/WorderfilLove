@@ -1,0 +1,18 @@
+---
+interface Props {
+  texto: string;
+  autor: string;
+  producto: string;
+  class?: string;
+}
+const { texto, autor, producto, class: clase } = Astro.props;
+---
+
+<figure class:list={['papel flex flex-col gap-4 rounded-[20px] bg-soft p-8', clase]}>
+  <span class="font-display text-7xl leading-10 text-accent" aria-hidden="true">“</span>
+  <blockquote class="font-display text-[22px] leading-snug italic">{texto}</blockquote>
+  <figcaption class="mt-auto flex flex-col gap-1">
+    <span class="text-sm">{autor}</span>
+    <span class="etiqueta">Compró: {producto}</span>
+  </figcaption>
+</figure>

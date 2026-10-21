@@ -1,0 +1,33 @@
+---
+import type { Ilustracion } from '../data/productos';
+
+// Ilustraciones de línea que hacen de placeholder mientras no hay fotos reales.
+// La flama lleva la clase .flama para el parpadeo sutil.
+const dibujos: Record<Ilustracion, string> = {
+  frasco:
+    '<path d="M38 50h44v46a8 8 0 0 1-8 8H46a8 8 0 0 1-8-8z"/><path d="M38 60h44"/><path d="M60 50v-8"/><path d="M24 104h72"/><path class="flama" d="M60 42c-5-5-3-11 0-16 3 5 5 11 0 16z"/>',
+  pilar:
+    '<rect x="30" y="56" width="22" height="48" rx="3"/><rect x="62" y="44" width="26" height="60" rx="3"/><path d="M41 56v-6M75 44v-6"/><path d="M22 104h76"/><path class="flama" d="M41 50c-3-3-2-7 0-10 2 3 3 7 0 10z"/><path class="flama" d="M75 38c-3-3-2-7 0-10 2 3 3 7 0 10z"/>',
+  figurilla:
+    '<path d="M40 104c0-20 6-36 20-36s20 16 20 36z"/><circle cx="60" cy="56" r="14"/><path d="M48 48l-2-14 10 8M72 48l2-14-10 8"/><path d="M80 98c10 0 14-8 10-16"/><path d="M30 104h60"/>',
+};
+
+interface Props {
+  tipo: Ilustracion;
+  class?: string;
+}
+const { tipo, class: clase } = Astro.props;
+---
+
+<svg
+  class:list={[clase]}
+  viewBox="0 0 120 120"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role="img"
+  aria-label="Ilustración provisional del producto"
+  set:html={dibujos[tipo]}
+/>

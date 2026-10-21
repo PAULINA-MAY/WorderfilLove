@@ -1,0 +1,26 @@
+---
+import Icono, { type NombreIcono } from './Icono.astro';
+
+interface Props {
+  href: string;
+  variante?: 'primario' | 'secundario';
+  icono?: NombreIcono | null;
+  externo?: boolean;
+  class?: string;
+}
+const { href, variante = 'primario', icono = 'flecha-derecha', externo = false, class: clase } = Astro.props;
+---
+
+<a
+  href={href}
+  target={externo ? '_blank' : undefined}
+  rel={externo ? 'noopener' : undefined}
+  class:list={[
+    'papel papel-vivo group inline-flex items-center justify-center gap-2.5 rounded-full px-7 py-3.5 text-base font-medium',
+    variante === 'primario' ? 'acento bg-ink text-bg' : 'bg-bg text-ink',
+    clase,
+  ]}
+>
+  <slot />
+  {icono && <Icono nombre={icono} tamano={18} class="transition-transform duration-300 group-hover:translate-x-0.5" />}
+</a>

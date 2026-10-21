@@ -1,0 +1,20 @@
+---
+import Icono, { type NombreIcono } from './Icono.astro';
+
+interface Props {
+  numero: string;
+  titulo: string;
+  descripcion: string;
+  icono: NombreIcono;
+}
+const { numero, titulo, descripcion, icono } = Astro.props;
+---
+
+<li class="flex flex-col gap-3.5">
+  <span class="papel flex size-16 items-center justify-center rounded-full bg-bg text-accent">
+    <Icono nombre={icono} tamano={28} />
+  </span>
+  <span class="etiqueta">{numero}</span>
+  <h3 class="text-2xl leading-tight">{titulo}</h3>
+  <p class="text-sm opacity-75">{descripcion}</p>
+</li>

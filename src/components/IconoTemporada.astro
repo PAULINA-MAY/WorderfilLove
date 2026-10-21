@@ -1,0 +1,17 @@
+---
+import Icono from './Icono.astro';
+import { temporadas } from '../data/temporadas';
+
+// Pinta el ícono de cada temporada; el CSS de Base.astro deja visible solo el actual.
+interface Props {
+  tamano?: number;
+  class?: string;
+}
+const { tamano = 24, class: clase } = Astro.props;
+---
+
+{temporadas.map((t) => (
+  <span data-solo={t.clave} class:list={['inline-flex text-accent', clase]}>
+    <Icono nombre={t.clave} tamano={tamano} />
+  </span>
+))}

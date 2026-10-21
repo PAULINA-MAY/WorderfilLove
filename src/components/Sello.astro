@@ -1,0 +1,21 @@
+---
+// Sello circular "hecho a mano en Mérida" que gira lento.
+interface Props {
+  class?: string;
+}
+const { class: clase } = Astro.props;
+const id = 'circulo-sello';
+---
+
+<div class:list={['sello pointer-events-none size-28 text-ink md:size-32', clase]} aria-hidden="true">
+  <svg viewBox="0 0 120 120" class="size-full">
+    <defs>
+      <path id={id} d="M60 60 m -44 0 a 44 44 0 1 1 88 0 a 44 44 0 1 1 -88 0" />
+    </defs>
+    <circle cx="60" cy="60" r="57" fill="var(--bg)" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" />
+    <text class="font-mano" font-size="17" fill="currentColor" letter-spacing="1">
+      <textPath href={`#${id}`}>hecho a mano en Mérida ✦ hecho a mano ✦</textPath>
+    </text>
+    <path d="M60 46c4 5 7 9 7 13a7 7 0 0 1-14 0c0-3 1.5-5 3-6.5 0 2 1.5 3.5 3 3.5 0-3.5 0-6.5 1-10z" fill="var(--accent)" />
+  </svg>
+</div>

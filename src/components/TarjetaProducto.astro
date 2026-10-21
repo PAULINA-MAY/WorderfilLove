@@ -1,0 +1,37 @@
+---
+import Ilustracion from './Ilustracion.astro';
+import BotonWhatsApp from './BotonWhatsApp.astro';
+import type { Producto } from '../data/productos';
+import { temporadas } from '../data/temporadas';
+
+interface Props {
+  producto: Producto;
+  /** Muestra la temporada antes de la frase (en el catálogo completo). */
+  conTemporada?: boolean;
+  class?: string;
+}
+const { producto, conTemporada = false, class: clase } = Astro.props;
+const temporada = temporadas.find((t) => t.clave === producto.temporada)!;
+const nombreCorto = temporada.clave === 'general' ? 'Todo el año' : temporada.nombre.split(' / ')[0];
+---
+
+<article
+  class:list={['papel papel-vivo flex flex-col overflow-hidden rounded-[20px] bg-bg', clase]}
+  data-producto
+  data-tipo={producto.tipo}
+  data-temporada-producto={producto.temporada}
+>
+  <div class="flex aspect-[6/5] items-center justify-center border-b-[1.5px] border-dashed border-ink bg-soft">
+    <Ilustracion tipo={producto.ilustracion} class="w-2/5 opacity-60" />
+  </div>
+  <div class="flex flex-1 flex-col gap-2 p-6">
+    <h3 class="text-2xl leading-tight">{producto.nombre}</h3>
+    <p class="text-sm opacity-75">
+      {conTemporada && <span>{nombreCorto} · </span>}
+      {producto.frase}
+    </p>
+    <div class="mt-auto pt-3">
+      <BotonWhatsApp producto={producto.nombre} />
+    </div>
+  </div>
+</article>

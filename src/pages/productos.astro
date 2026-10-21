@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import Icono from '../components/Icono.astro';
+import TarjetaProducto from '../components/TarjetaProducto.astro';
+import { temporadas } from '../data/temporadas';
+import { productoPorId, productos } from '../data/productos';
+
+const filtrosTipo = [
+  { valor: 'todo', texto: 'Todo' },
+  { valor: 'vela', texto: 'Velas' },
+  { valor: 'figurilla', texto: 'Figurillas' },
+];
+const filtrosTemporada = [
+  { valor: 'todo', texto: 'Todas' },
+  ...temporadas.map((t) => ({
+    valor: t.clave,
+    texto: t.clave === 'general' ? 'Todo el año' : t.nombre.split(' / ')[0],
+  })),
+];
+---
+
+<Base actual="productos" titulo="Productos">
+  <section class="contenedor flex flex-col gap-4 pt-10 pb-8 md:pt-20 md:pb-14">
+    <p class="nota">todo hecho a mano, pieza por pieza</p>
+    <h1 class="text-5xl leading-none md:text-[72px]">Nuestros <em>productos</em></h1>
+    <p class="opacity-80 md:text-lg">
+      Velas aromáticas y figurillas de yeso hechas a mano. Cotiza cualquier pieza por WhatsApp.
+    </p>
+  </section>
+
+  <!-- Temporada actual destacada -->
+  <div class="contenedor pb-12 md:pb-24">
+    {temporadas.map((t) => (
+      <section data-solo={t.clave} class="papel flex flex-col gap-6 overflow-hidden rounded-[28px] bg-soft py-7 pl-5 md:gap-9 md:p-12">
+        <div class="flex items-center gap-3 md:gap-5">
+          <span class="text-accent"><Icono nombre={t.clave} tamano={48} /></span>
+          <div class="flex flex-col gap-1.5">
+            <p class="etiqueta">{t.clave === 'general' ? 'Todo el año' : `Temporada actual · ${t.nombre}`}</p>
+            <h2 class="text-[26px] leading-tight md:text-[52px]">
+              {t.tituloBloque[0]} <em>{t.tituloBloque[1]}</em>
+            </h2>
+          </div>
+        </div>
+        <div class="carrusel flex gap-4 overflow-x-auto pt-1 pr-5 pb-3 md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:pr-0">
+          {t.destacados.map((id) => (
+            <TarjetaProducto producto={productoPorId(id)} class="w-[72%] shrink-0 md:w-auto" />
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+
+  <!-- Catálogo completo -->
+  <section class="revelar contenedor flex flex-col gap-8 pb-20 md:pb-32" data-catalogo>
+    <h2 class="text-4xl leading-[1.05] md:text-[52px]">Todo <em>el catálogo</em></h2>
+
+    <div class="flex flex-col gap-3.5">
+      {[{ grupo: 'tipo', etiqueta: 'Tipo', opciones: filtrosTipo }, { grupo: 'temporada', etiqueta: 'Temporada', opciones: filtrosTemporada }].map((f) => (
+        <div class="flex items-center gap-3" role="group" aria-label={`Filtrar por ${f.etiqueta.toLowerCase()}`}>
+          <span class="etiqueta hidden w-24 shrink-0 text-ink opacity-60 md:block">{f.etiqueta}</span>
+          <div class="carrusel -mr-5 flex gap-2.5 overflow-x-auto pr-5 md:mr-0 md:flex-wrap md:pr-0">
+            {f.opciones.map((o, i) => (
+              <button
+                type="button"
+                data-filtro={f.grupo}
+                data-valor={o.valor}
+                aria-pressed={i === 0 ? 'true' : 'false'}
+                class="shrink-0 rounded-full border-[1.5px] border-ink px-[18px] py-2 text-[15px] whitespace-nowrap transition-colors hover:text-accent aria-pressed:bg-ink aria-pressed:text-bg aria-pressed:hover:text-bg"
+              >
+                {o.texto}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="grid gap-7 sm:grid-cols-2 lg:grid-cols-4" data-rejilla>
+      {productos.map((p) => <TarjetaProducto producto={p} conTemporada />)}
+    </div>
+    <p class="hidden py-10 text-center opacity-70" data-vacio>
+      No hay piezas con esos filtros. Escríbenos por WhatsApp y te contamos qué tenemos.
+    </p>
+  </section>
+
+  <script>
+    import { iniciarFiltros } from '../scripts/filtros';
+    iniciarFiltros();
+  </script>
+</Base>

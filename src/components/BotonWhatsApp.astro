@@ -1,0 +1,20 @@
+---
+import Icono from './Icono.astro';
+import { enlaceWhatsApp, mensajeProducto } from '../data/sitio';
+
+interface Props {
+  producto: string;
+}
+const { producto } = Astro.props;
+---
+
+<a
+  href={enlaceWhatsApp(mensajeProducto(producto))}
+  target="_blank"
+  rel="noopener"
+  class="flex w-full items-center justify-center gap-2.5 rounded-full bg-ink px-5 py-3 text-[15px] font-medium text-bg transition-colors duration-300 hover:bg-accent"
+  aria-label={`Cotizar ${producto} por WhatsApp`}
+>
+  <Icono nombre="whatsapp" tamano={20} />
+  Cotizar por WhatsApp
+</a>
