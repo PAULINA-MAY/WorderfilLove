@@ -13,11 +13,11 @@
  * --accent-texto es su versión legible para letras.
  */
 :root {
-  --bg: #fefaeb;
-  --soft: #f8e69a;
+  --bg: #fdedf9;
+  --soft: #f3a6df;
   --ink: #3b2f27;
-  --accent: #f49091;
-  --accent-texto: #a64a4e;
+  --accent: #f3a6df;
+  --accent-texto: #783569;
   --line: color-mix(in srgb, var(--ink) 14%, var(--bg));
 }
 
