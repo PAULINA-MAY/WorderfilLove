@@ -2,8 +2,6 @@
 import Boton from './Boton.astro';
 import Icono from './Icono.astro';
 import Ilustracion from './Ilustracion.astro';
-import Sello from './Sello.astro';
-import Subrayado from './Subrayado.astro';
 import { Image } from 'astro:assets';
 import { temporadas, type ClaveTemporada } from '../data/temporadas';
 import fotoHalloween from '../assets/halloween/VelaYesoCalabazas.jpeg';
@@ -21,11 +19,11 @@ const fotos: Partial<Record<ClaveTemporada, { src: ImageMetadata; alt: string }>
     <div class="order-2 flex flex-col gap-6 md:order-1 md:gap-7">
       <p class="flex items-center gap-3">
         <span class="text-accent"><Icono nombre={t.clave} tamano={26} /></span>
-        <span class="nota">{t.clave === 'general' ? 'hecho con cariño ✦' : 'nueva temporada ✦'}</span>
+        <span class="nota">{t.clave === 'general' ? 'hecho con cariño' : 'nueva temporada'}</span>
       </p>
       <h1 class="text-[54px] leading-[0.95] md:text-[88px]">
         {t.frase[0]}<br />
-        <em class="text-accent-texto"><Subrayado>{t.frase[1]}</Subrayado></em>
+        <em class="text-accent-texto">{t.frase[1]}</em>
       </h1>
       <p class="max-w-[480px] text-base leading-relaxed opacity-80 md:text-lg">{t.descripcion}</p>
       <div class="flex flex-col gap-4 sm:flex-row">
@@ -54,8 +52,6 @@ const fotos: Partial<Record<ClaveTemporada, { src: ImageMetadata; alt: string }>
           <Ilustracion tipo="frasco" class="absolute top-[52%] left-[4%] w-[40%] opacity-85" />
           <Ilustracion tipo="figurilla" class="absolute top-[56%] left-[58%] w-[36%] opacity-85" />
         </div>
-      )}
-      <Sello class="absolute -top-4 -left-6 max-md:left-0 max-md:size-24" />
-    </div>
+      )}    </div>
   </section>
 ))}

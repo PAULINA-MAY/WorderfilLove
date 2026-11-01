@@ -69,18 +69,33 @@ function masIntenso(l: number, c: number, h: number): Rgb {
 
 /**
  * Versión del acento para usar en texto: conserva su tono e intensidad y solo
- * lo oscurece lo necesario para que se lea sobre `--bg` y sobre `--soft`
- * (que en global.css es 6% de tinta sobre el fondo).
+ * lo oscurece lo necesario para que se lea sobre todos los `fondos`.
  */
-export function acentoTexto(colores: { bg: string; ink: string; accent: string }): string {
-  const soft = aHex(mezclar(aRgb(colores.ink), aRgb(colores.bg), 0.06));
-  const { l, c, h } = aOklch(aRgb(colores.accent));
+export function acentoTexto(accent: string, ink: string, fondos: string[]): string {
+  const { l, c, h } = aOklch(aRgb(accent));
 
   for (let claridad = l; claridad > 0; claridad -= 0.005) {
     const candidato = aHex(masIntenso(claridad, c, h));
-    if (contraste(candidato, colores.bg) >= CONTRASTE_TEXTO && contraste(candidato, soft) >= CONTRASTE_TEXTO) {
-      return candidato;
-    }
+    if (fondos.every((f) => contraste(candidato, f) >= CONTRASTE_TEXTO)) return candidato;
   }
-  return colores.ink;
+  return ink;
+}
+
+export interface Paleta {
+  bg: string;
+  soft: string;
+  ink: string;
+  accent: string;
+  accentTexto: string;
+}
+
+/**
+ * Tokens finales de una temporada. Para el look minimalista, el pastel de la
+ * temporada no pinta toda la página: el fondo es casi blanco (20% del pastel)
+ * y el pastel puro queda para los bloques `--soft` (tarjetas, secciones).
+ */
+export function paleta(colores: { bg: string; ink: string; accent: string }): Paleta {
+  const bg = aHex(mezclar(aRgb(colores.bg), [255, 255, 255], 0.2));
+  const soft = colores.bg.toLowerCase();
+  return { bg, soft, ink: colores.ink, accent: colores.accent, accentTexto: acentoTexto(colores.accent, colores.ink, [bg, soft]) };
 }

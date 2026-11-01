@@ -1,26 +1,24 @@
 @import "tailwindcss";
-/* "full" trae los ejes SOFT y WONK de Fraunces, que le dan el toque hecho a mano. */
-@import "@fontsource-variable/fraunces/full.css";
-@import "@fontsource-variable/fraunces/full-italic.css";
+@import "@fontsource-variable/fraunces/wght.css";
+@import "@fontsource-variable/fraunces/wght-italic.css";
 @import "@fontsource-variable/karla";
 @import "@fontsource-variable/karla/wght-italic.css";
-@import "@fontsource-variable/caveat";
 
 /*
- * Los colores de cada temporada (--bg, --ink, --accent) se inyectan desde
- * src/data/temporadas.ts en Base.astro. Aquí solo se derivan los demás tokens
- * y se exponen a Tailwind.
+ * Los colores de cada temporada se calculan en src/data/contraste.ts (paleta)
+ * y se inyectan en Base.astro. Aquí solo se deriva --line y se exponen a Tailwind.
  *
- * --accent es el color tal cual, para fondos, sombras e íconos.
- * --accent-texto es su versión legible para letras (src/data/contraste.ts).
+ * --bg es casi blanco con un toque del pastel; --soft es el pastel puro, para bloques.
+ * --accent es el color tal cual, para fondos e íconos.
+ * --accent-texto es su versión legible para letras.
  */
 :root {
-  --bg: #f8e69a;
+  --bg: #fefaeb;
+  --soft: #f8e69a;
   --ink: #3b2f27;
   --accent: #f49091;
-  --accent-texto: #9e4347;
-  --line: color-mix(in srgb, var(--ink) 16%, var(--bg));
-  --soft: color-mix(in srgb, var(--ink) 6%, var(--bg));
+  --accent-texto: #a64a4e;
+  --line: color-mix(in srgb, var(--ink) 14%, var(--bg));
 }
 
 @theme inline {
@@ -41,7 +39,6 @@
 
   --font-display: "Fraunces Variable", Georgia, serif;
   --font-sans: "Karla Variable", system-ui, sans-serif;
-  --font-mano: "Caveat Variable", cursive;
 
   --ease-papel: cubic-bezier(0.3, 0.7, 0.2, 1);
 }
@@ -53,16 +50,12 @@
   }
   body {
     @apply bg-bg text-ink font-sans antialiased;
-    /* Textura de papel: puntitos del color de la tinta, muy tenues. */
-    background-image: radial-gradient(color-mix(in srgb, var(--ink) 7%, transparent) 1px, transparent 1px);
-    background-size: 6px 6px;
   }
   h1, h2, h3, .font-display {
     @apply font-display;
-    font-variation-settings: "SOFT" 100, "WONK" 1;
   }
-  h1, h2 { font-weight: 480; letter-spacing: -0.01em; }
-  h3 { font-weight: 560; }
+  h1, h2 { font-weight: 380; letter-spacing: -0.02em; }
+  h3 { font-weight: 450; }
   em { font-weight: 400; }
   :focus-visible {
     outline: 2px solid var(--accent-texto);
@@ -77,62 +70,27 @@
   .contenedor {
     @apply mx-auto w-full max-w-[1440px] px-5 md:px-20;
   }
+  /* Antetítulo discreto sobre los encabezados de sección. */
   .nota {
-    @apply inline-block self-start font-mano text-2xl leading-none text-accent-texto;
-    transform: rotate(-3deg);
-    transform-origin: left bottom;
+    @apply inline-block self-start font-sans text-sm leading-none text-accent-texto;
   }
 
-  /* Recortado en papel: borde de tinta y sombra dura. */
+  /* Contorno fino, sin sombra. */
   .papel {
-    border: 1.5px solid var(--ink);
-    box-shadow: 4px 4px 0 var(--ink);
+    border: 1px solid var(--line);
   }
-  /* Se levanta al pasar el mouse y se "aplasta" al dar clic. */
   .papel-vivo {
-    transition: transform 0.25s var(--ease-papel), box-shadow 0.25s var(--ease-papel);
+    transition: border-color 0.2s ease;
   }
   .papel-vivo:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--ink);
-  }
-  /* En fondos de tinta la sombra va en color de acento para que se note. */
-  .papel.acento { box-shadow: 4px 4px 0 var(--accent); }
-  .papel-vivo.acento:hover { box-shadow: 6px 6px 0 var(--accent); }
-  .papel-vivo.acento:active { box-shadow: 1px 1px 0 var(--accent); }
-  .papel-vivo:active {
-    transform: translate(3px, 3px);
-    box-shadow: 1px 1px 0 var(--ink);
-    transition-duration: 0.08s;
+    border-color: var(--ink);
   }
 }
 
-/* ---------- Subrayado a mano que se dibuja solo ---------- */
-.subrayado { position: relative; white-space: nowrap; }
-.subrayado svg {
-  position: absolute;
-  left: 0;
-  bottom: -0.12em;
-  width: 100%;
-  height: 0.28em;
-  overflow: visible;
-}
-.subrayado path {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: dibujar 1.1s var(--ease-papel) 0.5s forwards;
-}
-html.con-intro .subrayado path { animation-delay: 2.4s; }
-@keyframes dibujar { to { stroke-dashoffset: 0; } }
-
-/* ---------- Sello que gira lento ---------- */
-.sello { animation: girar 24s linear infinite; }
-@keyframes girar { to { transform: rotate(360deg); } }
-
-/* ---------- Aparecer al hacer scroll, como papel que se acomoda ---------- */
+/* ---------- Aparecer al hacer scroll ---------- */
 html.js .revelar {
   opacity: 0;
-  transform: translateY(28px) rotate(-0.8deg);
+  transform: translateY(12px);
   transition: opacity 0.7s var(--ease-papel), transform 0.7s var(--ease-papel);
 }
 html.js .revelar.visible { opacity: 1; transform: none; }

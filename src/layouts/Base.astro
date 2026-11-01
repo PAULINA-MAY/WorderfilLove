@@ -5,7 +5,7 @@ import Footer from '../components/Footer.astro';
 import BotonFlotante from '../components/BotonFlotante.astro';
 import IntroTemporada from '../components/IntroTemporada.astro';
 import { claveParaFecha, rangosPlanos, temporadas } from '../data/temporadas';
-import { acentoTexto } from '../data/contraste';
+import { paleta } from '../data/contraste';
 import { sitio } from '../data/sitio';
 
 interface Props {
@@ -20,7 +20,10 @@ const claves = temporadas.map((t) => t.clave);
 
 // Paleta de cada temporada y regla para ocultar el contenido de las que no tocan.
 const cssTemporadas = temporadas
-  .map((t) => `html[data-temporada="${t.clave}"]{--bg:${t.colores.bg};--ink:${t.colores.ink};--accent:${t.colores.accent};--accent-texto:${acentoTexto(t.colores)}}`)
+  .map((t) => {
+    const p = paleta(t.colores);
+    return `html[data-temporada="${t.clave}"]{--bg:${p.bg};--soft:${p.soft};--ink:${p.ink};--accent:${p.accent};--accent-texto:${p.accentTexto}}`;
+  })
   .join('');
 const cssSolo = claves
   .map((c) => `html:not([data-temporada="${c}"]) [data-solo="${c}"]{display:none!important}`)
