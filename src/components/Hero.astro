@@ -4,7 +4,16 @@ import Icono from './Icono.astro';
 import Ilustracion from './Ilustracion.astro';
 import Sello from './Sello.astro';
 import Subrayado from './Subrayado.astro';
-import { temporadas } from '../data/temporadas';
+import { Image } from 'astro:assets';
+import { temporadas, type ClaveTemporada } from '../data/temporadas';
+import fotoHalloween from '../assets/halloween/VelaYesoCalabazas.jpeg';
+import fotoMuertos from '../assets/diaMuertos/VelaYesoFlorSempasuchilCruzBase.jpeg';
+
+// Las temporadas sin foto siguen con las ilustraciones de línea.
+const fotos: Partial<Record<ClaveTemporada, { src: ImageMetadata; alt: string }>> = {
+  halloween: { src: fotoHalloween, alt: 'Tres velas en macetas de yeso: una calabaza naranja, una negra con puntos dorados y una calabaza blanca' },
+  muertos: { src: fotoMuertos, alt: 'Vela en forma de cruz y vela de flor de cempasúchil sobre una base de yeso plateada' },
+};
 ---
 
 {temporadas.map((t) => (
@@ -26,13 +35,26 @@ import { temporadas } from '../data/temporadas';
     </div>
 
     <div class="relative order-1 md:order-2">
-      <!-- Aquí irá la foto de fondo con los productos de la temporada. -->
-      <div class="papel relative aspect-[5/6] overflow-hidden rounded-t-full rounded-b-[24px] bg-soft max-md:mx-auto max-md:w-[82%]" role="img" aria-label="Productos destacados de la temporada">
-        <span class="absolute inset-x-[10%] top-[18%] aspect-square rounded-full bg-accent opacity-20 blur-2xl"></span>
-        <Ilustracion tipo="pilar" class="absolute top-[26%] left-[30%] w-[48%] opacity-85" />
-        <Ilustracion tipo="frasco" class="absolute top-[52%] left-[4%] w-[40%] opacity-85" />
-        <Ilustracion tipo="figurilla" class="absolute top-[56%] left-[58%] w-[36%] opacity-85" />
-      </div>
+      {fotos[t.clave] ? (
+        <div class="papel relative aspect-[5/6] overflow-hidden rounded-t-full rounded-b-[24px] bg-soft max-md:mx-auto max-md:w-[82%]">
+          <!-- lazy: las fotos de las temporadas ocultas (display:none) no se descargan. -->
+          <Image
+            src={fotos[t.clave]!.src}
+            alt={fotos[t.clave]!.alt}
+            widths={[400, 560, 800, 1120]}
+            sizes="(min-width: 768px) 560px, 82vw"
+            loading="lazy"
+            class="size-full object-cover object-[50%_70%]"
+          />
+        </div>
+      ) : (
+        <div class="papel relative aspect-[5/6] overflow-hidden rounded-t-full rounded-b-[24px] bg-soft max-md:mx-auto max-md:w-[82%]" role="img" aria-label="Productos destacados de la temporada">
+          <span class="absolute inset-x-[10%] top-[18%] aspect-square rounded-full bg-accent opacity-20 blur-2xl"></span>
+          <Ilustracion tipo="pilar" class="absolute top-[26%] left-[30%] w-[48%] opacity-85" />
+          <Ilustracion tipo="frasco" class="absolute top-[52%] left-[4%] w-[40%] opacity-85" />
+          <Ilustracion tipo="figurilla" class="absolute top-[56%] left-[58%] w-[36%] opacity-85" />
+        </div>
+      )}
       <Sello class="absolute -top-4 -left-6 max-md:left-0 max-md:size-24" />
     </div>
   </section>
