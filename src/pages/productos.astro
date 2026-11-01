@@ -56,16 +56,16 @@ const filtrosTemporada = [
 
     <div class="flex flex-col gap-3.5">
       {[{ grupo: 'tipo', etiqueta: 'Tipo', opciones: filtrosTipo }, { grupo: 'temporada', etiqueta: 'Temporada', opciones: filtrosTemporada }].map((f) => (
-        <div class="flex items-center gap-3" role="group" aria-label={`Filtrar por ${f.etiqueta.toLowerCase()}`}>
-          <span class="etiqueta hidden w-24 shrink-0 text-ink opacity-60 md:block">{f.etiqueta}</span>
-          <div class="carrusel -mr-5 flex gap-2.5 overflow-x-auto pr-5 md:mr-0 md:flex-wrap md:pr-0">
+        <div class="flex flex-col gap-2 md:flex-row md:items-center md:gap-3" role="group" aria-label={`Filtrar por ${f.etiqueta.toLowerCase()}`}>
+          <span class="etiqueta w-24 shrink-0 text-ink opacity-60">{f.etiqueta}</span>
+          <div class="flex flex-wrap gap-2 md:gap-2.5">
             {f.opciones.map((o, i) => (
               <button
                 type="button"
                 data-filtro={f.grupo}
                 data-valor={o.valor}
                 aria-pressed={i === 0 ? 'true' : 'false'}
-                class="shrink-0 rounded-full border-[1.5px] border-ink px-[18px] py-2 text-[15px] whitespace-nowrap transition-colors hover:border-hover hover:bg-hover hover:text-hover-texto aria-pressed:bg-ink aria-pressed:text-bg aria-pressed:hover:border-ink aria-pressed:hover:bg-ink aria-pressed:hover:text-bg"
+                class="min-h-11 shrink-0 touch-manipulation rounded-full border-[1.5px] border-ink px-4 py-2 text-sm whitespace-nowrap md:min-h-0 md:px-[18px] md:text-[15px] transition-colors hover:border-hover hover:bg-hover hover:text-hover-texto aria-pressed:bg-ink aria-pressed:text-bg aria-pressed:hover:border-ink aria-pressed:hover:bg-ink aria-pressed:hover:text-bg"
               >
                 {o.texto}
               </button>
