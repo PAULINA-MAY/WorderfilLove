@@ -3,14 +3,14 @@ export const sitio = {
   nombre: 'Wonderful Love',
   descripcion:
     'Velas aromáticas y figurillas de yeso hechas a mano en Mérida, Yucatán, con temáticas para cada temporada.',
-  whatsapp: '529991234567',
-  whatsappVisible: '999 123 4567',
+  whatsapp: '529994130668',
+  whatsappVisible: '999 413 0668',
   facebook: 'https://facebook.com/wonderfullove.mx',
   facebookVisible: '/wonderfullove.mx',
   correo: 'hola@wonderfullove.mx',
-  direccion: 'Calle 60 #123 x 55 y 57, Centro, Mérida, Yuc.',
+  direccion: 'Calle 43 x 18 y 20 Roble agricola, Mérida, Yucatán, México , 376 A',
   horario: 'Lunes a sábado · 10:00 a 19:00',
-  mapa: 'https://maps.google.com/?q=Calle+60+Centro+Merida+Yucatan',
+  mapa: 'https://maps.google.com/?q=Calle+43+x+18+y+20+Roble+Agricola,+Mérida,+Yucatán,+México,+376+A',
 };
 
 export const mensajeGeneral = 'Hola, vi su página y quiero información.';
