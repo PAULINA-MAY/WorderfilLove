@@ -42,7 +42,7 @@ export const temporadas: Temporada[] = [
       'Calabaza, canela y humo de leña. Velas aromáticas y figurillas de yeso hechas a mano, en piezas contadas para esta temporada.',
     tituloBloque: ['Para', 'noches de brujas'],
     rangos: [{ desde: [10, 1], hasta: [10, 20] }],
-    destacados: ['vela-calabaza-especiada', 'gatito-bruja', 'velas-humo-de-lena'],
+    destacados: ['vela-fantasmita', 'fantasmita-brujo', 'vela-calabaza-flores'],
     colores: { bg: '#F5B56F', ink: '#2A2130', accent: '#F3A6DF' },
   },
   {
@@ -54,7 +54,7 @@ export const temporadas: Temporada[] = [
       'Velas de cempasúchil y copal, y figurillas para tu altar de Hanal Pixán, hechas a mano en Mérida.',
     tituloBloque: ['Para', 'tu altar'],
     rangos: [{ desde: [10, 21], hasta: [11, 10] }],
-    destacados: ['vela-cempasuchil', 'calaverita', 'velas-copal'],
+    destacados: ['vela-cruz-calabaza', 'vela-flor-morada', 'velas-calabaza-charola'],
     colores: { bg: '#F8E69A', ink: '#4A1F3A', accent: '#F5B56F' },
   },
   {

@@ -1,4 +1,11 @@
 import type { ClaveTemporada } from './temporadas';
+import fotoFantasmita from '../assets/halloween/FantasmaYeso.jpeg';
+import fotoVelaFantasmita from '../assets/halloween/VelaYesoFantasmaCalabazas.jpeg';
+import fotoCalabazaFlores from '../assets/halloween/VelaYesoFlores.jpeg';
+import fotoCalabazas from '../assets/halloween/Calabazas.jpeg';
+import fotoCalabazasCharola from '../assets/diaMuertos/VelaYesoCalabazaBase.jpeg';
+import fotoFlorMorada from '../assets/diaMuertos/VelaYesoFloresBase.jpeg';
+import fotoCruzCalabaza from '../assets/diaMuertos/YesoVelaCruzCalabaza.jpeg';
 
 export type TipoProducto = 'vela' | 'figurilla';
 /** Ilustración de línea que hace de placeholder mientras no hay fotos reales. */
@@ -11,17 +18,32 @@ export interface Producto {
   tipo: TipoProducto;
   temporada: ClaveTemporada;
   ilustracion: Ilustracion;
+  /** Foto real del producto; si no hay, la tarjeta usa la ilustración. */
+  foto?: {
+    src: ImageMetadata;
+    alt: string;
+    /** `object-position` del recorte, para centrar la pieza en la tarjeta. */
+    posicion?: string;
+  };
 }
 
-// Catálogo ficticio para el prototipo.
+// Halloween y Día de Muertos son piezas reales (con foto); el resto es ficticio para el prototipo.
 export const productos: Producto[] = [
-  { id: 'vela-calabaza-especiada', nombre: 'Vela Calabaza Especiada', frase: 'Huele a tarde de octubre.', tipo: 'vela', temporada: 'halloween', ilustracion: 'frasco' },
-  { id: 'gatito-bruja', nombre: 'Gatito Bruja de Yeso', frase: 'Un pequeño guardián para tu repisa.', tipo: 'figurilla', temporada: 'halloween', ilustracion: 'figurilla' },
-  { id: 'velas-humo-de-lena', nombre: 'Velas Humo de Leña', frase: 'Para encender a medianoche.', tipo: 'vela', temporada: 'halloween', ilustracion: 'pilar' },
+  { id: 'fantasmita-brujo', nombre: 'Fantasmita Brujo de Yeso', frase: 'Con sombrero y varita, listo para la noche.', tipo: 'figurilla', temporada: 'halloween', ilustracion: 'figurilla',
+    foto: { src: fotoFantasmita, alt: 'Figurilla de yeso de un fantasma blanco con sombrero de bruja morado y una varita con estrella roja', posicion: '50% 45%' } },
+  { id: 'vela-fantasmita', nombre: 'Vela Fantasmita', frase: 'Calabacitas de cera dentro de un fantasma de yeso.', tipo: 'vela', temporada: 'halloween', ilustracion: 'frasco',
+    foto: { src: fotoVelaFantasmita, alt: 'Vela en un recipiente de yeso con forma de fantasma, con tres calabacitas moradas de cera', posicion: '50% 60%' } },
+  { id: 'vela-calabaza-flores', nombre: 'Vela Calabaza con Flores', frase: 'Florecitas de cera en una calabaza de yeso.', tipo: 'vela', temporada: 'halloween', ilustracion: 'frasco',
+    foto: { src: fotoCalabazaFlores, alt: 'Vela en una calabaza de yeso rosa con tres flores amarillas de cera', posicion: '50% 60%' } },
+  { id: 'calabazas-yeso', nombre: 'Calabazas de Yeso', frase: 'Una con tapa y otra con vela, para tu repisa.', tipo: 'figurilla', temporada: 'halloween', ilustracion: 'figurilla',
+    foto: { src: fotoCalabazas, alt: 'Dos calabazas de yeso: una rosa con vela y una naranja con tapa', posicion: '50% 35%' } },
 
-  { id: 'vela-cempasuchil', nombre: 'Vela Cempasúchil', frase: 'Ilumina el camino a casa.', tipo: 'vela', temporada: 'muertos', ilustracion: 'frasco' },
-  { id: 'calaverita', nombre: 'Calaverita de Yeso', frase: 'Para recordar con alegría.', tipo: 'figurilla', temporada: 'muertos', ilustracion: 'figurilla' },
-  { id: 'velas-copal', nombre: 'Velas de Copal', frase: 'Aroma de altar y de abuela.', tipo: 'vela', temporada: 'muertos', ilustracion: 'pilar' },
+  { id: 'velas-calabaza-charola', nombre: 'Velas Calabaza en Charola', frase: 'Tres calabacitas de cera para tu altar.', tipo: 'vela', temporada: 'muertos', ilustracion: 'pilar',
+    foto: { src: fotoCalabazasCharola, alt: 'Tres velas amarillas en forma de calabaza sobre una charola de yeso blanca', posicion: '50% 65%' } },
+  { id: 'vela-flor-morada', nombre: 'Vela Flor Morada', frase: 'Una flor de cera con calabacitas y florecitas.', tipo: 'vela', temporada: 'muertos', ilustracion: 'pilar',
+    foto: { src: fotoFlorMorada, alt: 'Vela morada en forma de flor con calabacitas moradas y flores amarillas de cera sobre una charola de yeso', posicion: '50% 60%' } },
+  { id: 'vela-cruz-calabaza', nombre: 'Vela Cruz y Calabaza', frase: 'Luz para los que vuelven a casa.', tipo: 'vela', temporada: 'muertos', ilustracion: 'pilar',
+    foto: { src: fotoCruzCalabaza, alt: 'Vela blanca en forma de cruz y vela morada en forma de calabaza sobre una charola plateada', posicion: '50% 60%' } },
 
   { id: 'vela-pino-nevado', nombre: 'Vela Pino Nevado', frase: 'Huele a cabaña en diciembre.', tipo: 'vela', temporada: 'navidad', ilustracion: 'pilar' },
   { id: 'renito', nombre: 'Renito de Yeso', frase: 'Para colgar en el árbol.', tipo: 'figurilla', temporada: 'navidad', ilustracion: 'figurilla' },

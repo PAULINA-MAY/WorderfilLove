@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import Ilustracion from './Ilustracion.astro';
 import BotonWhatsApp from './BotonWhatsApp.astro';
 import type { Producto } from '../data/productos';
@@ -21,8 +22,20 @@ const nombreCorto = temporada.clave === 'general' ? 'Todo el año' : temporada.n
   data-tipo={producto.tipo}
   data-temporada-producto={producto.temporada}
 >
-  <div class="flex aspect-[6/5] items-center justify-center border-b-[1.5px] border-dashed border-ink bg-soft">
-    <Ilustracion tipo={producto.ilustracion} class="w-2/5 opacity-60" />
+  <div class="flex aspect-square items-center justify-center overflow-hidden border-b-[1.5px] border-dashed border-ink bg-soft">
+    {producto.foto ? (
+      <Image
+        src={producto.foto.src}
+        alt={producto.foto.alt}
+        widths={[360, 540, 720]}
+        sizes="(min-width: 768px) 420px, 78vw"
+        loading="lazy"
+        class="size-full object-cover"
+        style={producto.foto.posicion && `object-position: ${producto.foto.posicion}`}
+      />
+    ) : (
+      <Ilustracion tipo={producto.ilustracion} class="w-2/5 opacity-60" />
+    )}
   </div>
   <div class="flex flex-1 flex-col gap-2 p-6">
     <h3 class="text-2xl leading-tight">{producto.nombre}</h3>
