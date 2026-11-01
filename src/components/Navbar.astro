@@ -29,7 +29,7 @@ const links = [
               <a
                 href={l.href}
                 aria-current={l.id === actual ? 'page' : undefined}
-                class="relative rounded-full px-4 py-2 text-[15px] transition-colors hover:text-accent aria-[current=page]:text-accent"
+                class="relative rounded-full px-4 py-2 text-[15px] transition-colors hover:text-accent-texto aria-[current=page]:text-accent-texto"
               >
                 {l.texto}
                 {l.id === actual && (
@@ -72,7 +72,7 @@ const links = [
             <a
               href={l.href}
               aria-current={l.id === actual ? 'page' : undefined}
-              class="flex items-center justify-between py-3.5 font-display text-[28px] aria-[current=page]:text-accent"
+              class="flex items-center justify-between py-3.5 font-display text-[28px] aria-[current=page]:text-accent-texto"
             >
               {l.texto}
               {l.id === actual && <span class="nota text-xl">aquí estás</span>}

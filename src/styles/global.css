@@ -10,11 +10,15 @@
  * Los colores de cada temporada (--bg, --ink, --accent) se inyectan desde
  * src/data/temporadas.ts en Base.astro. Aquí solo se derivan los demás tokens
  * y se exponen a Tailwind.
+ *
+ * --accent es el color tal cual, para fondos, sombras e íconos.
+ * --accent-texto es su versión legible para letras (src/data/contraste.ts).
  */
 :root {
-  --bg: #f4ede3;
+  --bg: #f8e69a;
   --ink: #3b2f27;
-  --accent: #b5673a;
+  --accent: #f49091;
+  --accent-texto: #9e4347;
   --line: color-mix(in srgb, var(--ink) 16%, var(--bg));
   --soft: color-mix(in srgb, var(--ink) 6%, var(--bg));
 }
@@ -23,9 +27,17 @@
   --color-bg: var(--bg);
   --color-ink: var(--ink);
   --color-accent: var(--accent);
+  --color-accent-texto: var(--accent-texto);
   --color-line: var(--line);
   --color-soft: var(--soft);
   --color-whatsapp: #25d366;
+
+  /* Paleta de la marca, fija en todas las temporadas. */
+  --color-rosa: #f3a6df;
+  --color-amarillo: #f8e69a;
+  --color-celeste: #a8ddf2;
+  --color-naranja: #f5b56f;
+  --color-coral: #f49091;
 
   --font-display: "Fraunces Variable", Georgia, serif;
   --font-sans: "Karla Variable", system-ui, sans-serif;
@@ -53,20 +65,20 @@
   h3 { font-weight: 560; }
   em { font-weight: 400; }
   :focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--accent-texto);
     outline-offset: 3px;
   }
 }
 
 @layer components {
   .etiqueta {
-    @apply font-sans text-xs font-medium uppercase tracking-[0.14em] text-accent;
+    @apply font-sans text-xs font-medium uppercase tracking-[0.14em] text-accent-texto;
   }
   .contenedor {
     @apply mx-auto w-full max-w-[1440px] px-5 md:px-20;
   }
   .nota {
-    @apply inline-block self-start font-mano text-2xl leading-none text-accent;
+    @apply inline-block self-start font-mano text-2xl leading-none text-accent-texto;
     transform: rotate(-3deg);
     transform-origin: left bottom;
   }

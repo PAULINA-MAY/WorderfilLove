@@ -43,7 +43,7 @@ export const temporadas: Temporada[] = [
     tituloBloque: ['Para', 'noches de brujas'],
     rangos: [{ desde: [10, 1], hasta: [10, 20] }],
     destacados: ['vela-calabaza-especiada', 'gatito-bruja', 'velas-humo-de-lena'],
-    colores: { bg: '#2A2130', ink: '#F3E6D6', accent: '#E8833A' },
+    colores: { bg: '#F5B56F', ink: '#2A2130', accent: '#F3A6DF' },
   },
   {
     clave: 'muertos',
@@ -55,7 +55,7 @@ export const temporadas: Temporada[] = [
     tituloBloque: ['Para', 'tu altar'],
     rangos: [{ desde: [10, 21], hasta: [11, 10] }],
     destacados: ['vela-cempasuchil', 'calaverita', 'velas-copal'],
-    colores: { bg: '#FBF1E1', ink: '#4A1F3A', accent: '#E98A15' },
+    colores: { bg: '#F8E69A', ink: '#4A1F3A', accent: '#F5B56F' },
   },
   {
     clave: 'navidad',
@@ -67,7 +67,7 @@ export const temporadas: Temporada[] = [
     tituloBloque: ['Para', 'estas fiestas'],
     rangos: [{ desde: [11, 15], hasta: [1, 31] }],
     destacados: ['vela-pino-nevado', 'renito', 'vela-ponche'],
-    colores: { bg: '#F4F1EA', ink: '#1F3B2C', accent: '#A8322D' },
+    colores: { bg: '#A8DDF2', ink: '#1F3B2C', accent: '#F49091' },
   },
   {
     clave: 'amor',
@@ -79,7 +79,7 @@ export const temporadas: Temporada[] = [
     // 29 feb cubre también los años no bisiestos: el 28 queda dentro del rango.
     rangos: [{ desde: [2, 1], hasta: [2, 29] }],
     destacados: ['vela-rosa-vainilla', 'parejita', 'velas-corazon-canela'],
-    colores: { bg: '#FCEFEE', ink: '#5A2232', accent: '#D9546B' },
+    colores: { bg: '#F3A6DF', ink: '#5A2232', accent: '#F49091' },
   },
   {
     clave: 'primavera',
@@ -90,7 +90,7 @@ export const temporadas: Temporada[] = [
     tituloBloque: ['Para', 'recibir la primavera'],
     rangos: [{ desde: [3, 1], hasta: [3, 31] }],
     destacados: ['vela-azahar', 'macetita', 'velas-lavanda-menta'],
-    colores: { bg: '#F3F6EC', ink: '#2F4A2B', accent: '#8DB36B' },
+    colores: { bg: '#F8E69A', ink: '#2F4A2B', accent: '#F3A6DF' },
   },
   {
     clave: 'mamas',
@@ -102,7 +102,7 @@ export const temporadas: Temporada[] = [
     tituloBloque: ['Para', 'mamá'],
     rangos: [{ desde: [4, 15], hasta: [5, 10] }],
     destacados: ['figura-mama-ave', 'vela-jazmin-miel', 'velas-rosa-mosqueta'],
-    colores: { bg: '#FBF3EF', ink: '#5B3A3A', accent: '#C98B8B' },
+    colores: { bg: '#F3A6DF', ink: '#5B3A3A', accent: '#F8E69A' },
   },
   {
     clave: 'papas',
@@ -113,7 +113,7 @@ export const temporadas: Temporada[] = [
     tituloBloque: ['Para', 'papá'],
     rangos: [{ desde: [6, 1], hasta: [6, 21] }],
     destacados: ['vela-cafe-de-olla', 'bigoton', 'velas-madera-cuero'],
-    colores: { bg: '#EEF1F3', ink: '#22313F', accent: '#B07A3B' },
+    colores: { bg: '#A8DDF2', ink: '#22313F', accent: '#F5B56F' },
   },
   {
     clave: 'mexicano',
@@ -125,7 +125,7 @@ export const temporadas: Temporada[] = [
     tituloBloque: ['Para', 'la noche del grito'],
     rangos: [{ desde: [9, 1], hasta: [9, 30] }],
     destacados: ['catrina-mini', 'vela-chocolate-chile', 'velas-tricolor'],
-    colores: { bg: '#FAF6EE', ink: '#1E3D2F', accent: '#C0392B' },
+    colores: { bg: '#F49091', ink: '#1E3D2F', accent: '#F8E69A' },
   },
   {
     clave: 'general',
@@ -138,7 +138,7 @@ export const temporadas: Temporada[] = [
     // Cubre cualquier hueco del calendario; no necesita rangos propios.
     rangos: [],
     destacados: ['vela-canela-clavo', 'angelito', 'velas-vainilla'],
-    colores: { bg: '#F4EDE3', ink: '#3B2F27', accent: '#B5673A' },
+    colores: { bg: '#F8E69A', ink: '#3B2F27', accent: '#F49091' },
   },
 ];
 
