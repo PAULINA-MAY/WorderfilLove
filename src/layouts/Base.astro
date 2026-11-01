@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import BotonFlotante from '../components/BotonFlotante.astro';
 import Particulas from '../components/Particulas.astro';
+import IntroMarca from '../components/IntroMarca.astro';
 import { claveParaFecha, rangosPlanos, temporadas } from '../data/temporadas';
 import { paleta } from '../data/contraste';
 import { sitio } from '../data/sitio';
@@ -33,7 +34,8 @@ const cssSolo = claves
   .map((c) => `html:not([data-temporada="${c}"]) [data-solo="${c}"]{display:none!important}`)
   .join('');
 
-// Corre antes del primer pintado: elige la temporada (o la de ?temporada=).
+// Corre antes del primer pintado: elige la temporada (o la de ?temporada=) y decide si
+// se muestra la intro "Wonderful Love" (solo la primera vez en este navegador, o con ?intro).
 // `claveParaFecha` es la misma función que cubren las pruebas.
 const scriptTemporada = `(function(){
 var claveParaFecha=${claveParaFecha.toString()};
@@ -48,6 +50,7 @@ try{
 }catch(e){}
 if(claves.indexOf(c)<0){var d=new Date();c=claveParaFecha(rangos,d.getMonth()+1,d.getDate());}
 h.dataset.temporada=c;h.classList.add('js');
+try{if((!localStorage.getItem('wl-intro')||/[?&]intro(=|&|$)/.test(location.search))&&!matchMedia('(prefers-reduced-motion: reduce)').matches)h.classList.add('con-intro');}catch(e){}
 })();`;
 ---
 
@@ -67,6 +70,7 @@ h.dataset.temporada=c;h.classList.add('js');
     <style is:inline set:html={cssTemporadas + cssSolo}></style>
   </head>
   <body>
+    <IntroMarca />
     <Navbar actual={actual} />
     <main>
       <slot />
@@ -77,7 +81,9 @@ h.dataset.temporada=c;h.classList.add('js');
 
     <script>
       import { iniciarRevelar } from '../scripts/revelar';
+      import { iniciarIntro } from '../scripts/intro';
       iniciarRevelar();
+      iniciarIntro();
     </script>
   </body>
 </html>

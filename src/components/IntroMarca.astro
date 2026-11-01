@@ -1,0 +1,15 @@
+---
+// Pantalla de entrada: "Wonderful Love" aparece letra por letra, se subraya y
+// se desvanece. Usa los colores de la temporada activa. Ver scripts/intro.ts.
+import { sitio } from '../data/sitio';
+const letras = [...sitio.nombre];
+---
+
+<div class="intro-marca" aria-hidden="true">
+  <p class="intro-marca-nombre font-display">
+    {letras.map((l, i) => (
+      <span style={`--i:${i}`}>{l === ' ' ? ' ' : l}</span>
+    ))}
+  </p>
+  <span class="intro-marca-linea"></span>
+</div>
