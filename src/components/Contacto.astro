@@ -11,8 +11,8 @@ const medios: { icono: NombreIcono; etiqueta: string; valor: string; href?: stri
 ];
 ---
 
-<section id="contacto" class="bg-soft">
-  <div class="revelar contenedor grid items-center gap-10 py-16 md:grid-cols-[1fr_minmax(0,560px)] md:gap-20 md:py-24">
+<section id="contacto">
+  <div class="revelar contenedor grid items-center gap-10 py-16 md:py-24 lg:grid-cols-[1fr_minmax(0,560px)] lg:gap-20">
     <div class="flex flex-col gap-6 md:gap-7">
       <p class="nota">¡te esperamos!</p>
       <h2 class="text-4xl leading-[1.05] md:text-[52px]">Escríbenos o <em>visítanos</em></h2>
@@ -29,14 +29,14 @@ const medios: { icono: NombreIcono; etiqueta: string; valor: string; href?: stri
                 target={m.href && !m.href.startsWith('mailto') ? '_blank' : undefined}
                 rel={m.href ? 'noopener' : undefined}
                 class:list={[
-                  'flex items-center gap-4 rounded-2xl px-5 py-4 transition-colors',
-                  m.destacado ? 'papel papel-vivo bg-ink text-bg' : 'border border-line bg-bg',
-                  m.href && !m.destacado && 'hover:border-accent hover:text-accent-texto',
+                  'tarjeta-anim flex items-center gap-4 rounded-2xl px-5 py-4 transition-colors',
+                  m.destacado ? 'papel papel-vivo group bg-ink text-bg hover:bg-hover hover:text-hover-texto' : 'borde-metal',
+                  m.href && !m.destacado && 'papel-vivo',
                 ]}
               >
-                <span class:list={[!m.destacado && 'text-accent']}><Icono nombre={m.icono} tamano={22} /></span>
+                <span class:list={[!m.destacado && 'text-icono']}><Icono nombre={m.icono} tamano={22} /></span>
                 <span class="flex flex-col gap-0.5">
-                  <span class:list={['etiqueta', m.destacado && 'text-bg']}>{m.etiqueta}</span>
+                  <span class:list={['etiqueta', m.destacado && 'text-bg group-hover:text-hover-texto']}>{m.etiqueta}</span>
                   <span class="text-sm md:text-base">{m.valor}</span>
                 </span>
               </Tag>
@@ -51,7 +51,7 @@ const medios: { icono: NombreIcono; etiqueta: string; valor: string; href?: stri
       href={sitio.mapa}
       target="_blank"
       rel="noopener"
-      class="papel relative flex aspect-[14/13] items-center justify-center overflow-hidden rounded-[24px] bg-bg"
+      class="tarjeta-anim borde-metal relative flex aspect-[16/9] items-center lg:aspect-[14/13] justify-center overflow-hidden rounded-[24px]"
       aria-label="Ver ubicación en Google Maps"
     >
       <svg class="absolute inset-0 size-full text-line" preserveAspectRatio="none" viewBox="0 0 100 100" aria-hidden="true">
@@ -61,7 +61,7 @@ const medios: { icono: NombreIcono; etiqueta: string; valor: string; href?: stri
         </g>
         <path d="M-10 33 110 83" stroke="currentColor" stroke-width="2.2" />
       </svg>
-      <span class="relative flex flex-col items-center gap-3 text-accent">
+      <span class="relative flex flex-col items-center gap-3 text-icono">
         <Icono nombre="ubicacion" tamano={56} />
         <span class="etiqueta text-ink">Wonderful Love · Centro, Mérida</span>
       </span>

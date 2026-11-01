@@ -1,0 +1,66 @@
+---
+import FlorCempasuchil from './FlorCempasuchil.astro';
+import { temporadas } from '../data/temporadas';
+
+// Lo que cae (o sube) sobre la página en cada temporada: pétalos, nieve,
+// corazones... Cada temporada declara sus grupos en temporadas.ts. Solo se ve
+// la de la temporada activa (data-solo) y se ocultan con movimiento reducido
+// (global.css). Las posiciones son fijas para que el HTML no cambie entre compilaciones.
+const generar = (cantidad: number, semilla: number) =>
+  Array.from({ length: cantidad }, (_, i) => {
+    const n = i + semilla;
+    return {
+      izq: (n * 37 + 11) % 100,
+      retraso: -((n * 7.3) % 20).toFixed(1),
+      duracion: 14 + ((n * 5) % 9),
+      tam: 8 + ((n * 3) % 7),
+    };
+  });
+---
+
+{temporadas.filter((t) => t.particulas?.length).map((t) => (
+  <div class="particulas" data-solo={t.clave} aria-hidden="true">
+    {t.particulas!.map((grupo, g) =>
+      generar(grupo.cantidad, g * 13).map((p, i) => {
+        const color = grupo.colores[i % grupo.colores.length] ?? '';
+        // Las flores completas son más grandes y caen más despacio.
+        const tam = grupo.forma === 'cempasuchil' ? p.tam + 12 : p.tam;
+        const duracion = grupo.forma === 'cempasuchil' ? p.duracion + 4 : p.duracion;
+        const svg = Math.round(tam * 1.6);
+        // Bastón de caramelo: trazo blanco con rayas del color encima.
+        return (
+          <span
+            class={`particula particula-${grupo.forma}`}
+            style={`--izq:${p.izq}%;--retraso:${p.retraso}s;--duracion:${duracion}s;--tam:${tam}px;--color:${color}`}
+          >
+            {grupo.forma === 'cempasuchil' && <FlorCempasuchil tam={tam} />}
+            {grupo.forma === 'baston' && (
+              <svg width={svg} height={svg} viewBox="0 0 24 24" fill="none" stroke-linecap="round">
+                <path d="M9 22V9a4 4 0 0 1 8 0v1.5" stroke="#FFFFFF" stroke-width="3.4" />
+                <path d="M9 22V9a4 4 0 0 1 8 0v1.5" stroke={color} stroke-width="3.4" stroke-dasharray="2.2 2.2" stroke-linecap="butt" />
+              </svg>
+            )}
+            {grupo.forma === 'corazon' && (
+              <svg width={svg} height={svg} viewBox="0 0 24 24">
+                <path fill={color} d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z" />
+              </svg>
+            )}
+            {grupo.forma === 'flor' && (
+              <svg width={svg} height={svg} viewBox="0 0 24 24">
+                {[0, 72, 144, 216, 288].map((a) => (
+                  <ellipse cx="12" cy="6.5" rx="4" ry="5.5" fill={color} transform={`rotate(${a} 12 12)`} />
+                ))}
+                <circle cx="12" cy="12" r="3" fill="#F7D36B" />
+              </svg>
+            )}
+            {grupo.forma === 'estrella' && (
+              <svg width={svg} height={svg} viewBox="0 0 24 24">
+                <path fill={color} d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3l-6.2 3.6 1.6-7L2 9.2l7.1-.6z" />
+              </svg>
+            )}
+          </span>
+        );
+      }),
+    )}
+  </div>
+))}

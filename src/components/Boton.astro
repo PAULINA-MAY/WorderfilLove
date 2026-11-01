@@ -6,9 +6,11 @@ interface Props {
   variante?: 'primario' | 'secundario';
   icono?: NombreIcono | null;
   externo?: boolean;
+  /** Más chico en celular (para ir sobre una foto, como en el carrusel del hero). */
+  compacto?: boolean;
   class?: string;
 }
-const { href, variante = 'primario', icono = 'flecha-derecha', externo = false, class: clase } = Astro.props;
+const { href, variante = 'primario', icono = 'flecha-derecha', externo = false, compacto = false, class: clase } = Astro.props;
 ---
 
 <a
@@ -16,8 +18,9 @@ const { href, variante = 'primario', icono = 'flecha-derecha', externo = false, 
   target={externo ? '_blank' : undefined}
   rel={externo ? 'noopener' : undefined}
   class:list={[
-    'papel papel-vivo group inline-flex items-center justify-center gap-2.5 rounded-full px-7 py-3.5 text-base font-medium',
-    variante === 'primario' ? 'bg-ink text-bg' : 'bg-bg text-ink',
+    'papel-vivo group inline-flex items-center justify-center rounded-full font-medium whitespace-nowrap',
+    compacto ? 'gap-2 px-4 py-2.5 text-sm md:gap-2.5 md:px-7 md:py-3.5 md:text-base' : 'gap-2.5 px-7 py-3.5 text-base',
+    variante === 'primario' ? 'papel bg-ink text-bg transition-colors hover:bg-hover hover:text-hover-texto' : 'borde-metal text-ink',
     clase,
   ]}
 >

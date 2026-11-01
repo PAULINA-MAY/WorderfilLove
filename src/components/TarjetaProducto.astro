@@ -3,21 +3,18 @@ import { Image } from 'astro:assets';
 import Ilustracion from './Ilustracion.astro';
 import BotonWhatsApp from './BotonWhatsApp.astro';
 import type { Producto } from '../data/productos';
-import { temporadas } from '../data/temporadas';
 
 interface Props {
   producto: Producto;
-  /** Muestra la temporada antes de la frase (en el catálogo completo). */
-  conTemporada?: boolean;
+  /** Más compacta en celular, para que quepan dos tarjetas por fila. */
+  compacta?: boolean;
   class?: string;
 }
-const { producto, conTemporada = false, class: clase } = Astro.props;
-const temporada = temporadas.find((t) => t.clave === producto.temporada)!;
-const nombreCorto = temporada.clave === 'general' ? 'Todo el año' : temporada.nombre.split(' / ')[0];
+const { producto, compacta = false, class: clase } = Astro.props;
 ---
 
 <article
-  class:list={['papel papel-vivo flex flex-col overflow-hidden rounded-[20px] bg-bg', clase]}
+  class:list={['tarjeta-anim borde-metal papel-vivo flex flex-col overflow-hidden rounded-[20px] bg-bg', clase]}
   data-producto
   data-tipo={producto.tipo}
   data-temporada-producto={producto.temporada}
@@ -37,14 +34,11 @@ const nombreCorto = temporada.clave === 'general' ? 'Todo el año' : temporada.n
       <Ilustracion tipo={producto.ilustracion} class="w-2/5 opacity-60" />
     )}
   </div>
-  <div class="flex flex-1 flex-col gap-2 p-6">
-    <h3 class="text-2xl leading-tight">{producto.nombre}</h3>
-    <p class="text-sm opacity-75">
-      {conTemporada && <span>{nombreCorto} · </span>}
-      {producto.frase}
-    </p>
-    <div class="mt-auto pt-3">
-      <BotonWhatsApp producto={producto.nombre} />
+  <div class:list={['flex flex-1 flex-col', compacta ? 'gap-1.5 p-3.5 sm:gap-2 sm:p-6' : 'gap-2 p-6']}>
+    <h3 class:list={['leading-tight', compacta ? 'text-base break-words hyphens-auto sm:text-2xl' : 'text-2xl']}>{producto.nombre}</h3>
+    <p class:list={['opacity-75', compacta ? 'line-clamp-2 text-xs sm:line-clamp-none sm:text-sm' : 'text-sm']}>{producto.frase}</p>
+    <div class:list={['mt-auto', compacta ? 'pt-2 sm:pt-3' : 'pt-3']}>
+      <BotonWhatsApp producto={producto.nombre} compacto={compacta} />
     </div>
   </div>
 </article>

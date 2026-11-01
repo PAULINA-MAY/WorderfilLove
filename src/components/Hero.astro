@@ -2,56 +2,214 @@
 import Boton from './Boton.astro';
 import Icono from './Icono.astro';
 import Ilustracion from './Ilustracion.astro';
+import FlorCempasuchil from './FlorCempasuchil.astro';
 import { Image } from 'astro:assets';
-import { temporadas, type ClaveTemporada } from '../data/temporadas';
+import { temporadas, type ClaveTemporada, type Temporada } from '../data/temporadas';
+import { productoPorId } from '../data/productos';
+import { enlaceWhatsApp, mensajeProducto } from '../data/sitio';
 import fotoHalloween from '../assets/halloween/VelaYesoCalabazas.jpeg';
 import fotoMuertos from '../assets/diaMuertos/VelaYesoFlorSempasuchilCruzBase.jpeg';
 
+interface Foto {
+  src: ImageMetadata;
+  alt: string;
+  posicion?: string;
+}
+
 // Las temporadas sin foto siguen con las ilustraciones de línea.
-const fotos: Partial<Record<ClaveTemporada, { src: ImageMetadata; alt: string }>> = {
+const fotos: Partial<Record<ClaveTemporada, Foto>> = {
   halloween: { src: fotoHalloween, alt: 'Tres velas en macetas de yeso: una calabaza naranja, una negra con puntos dorados y una calabaza blanca' },
   muertos: { src: fotoMuertos, alt: 'Vela en forma de cruz y vela de flor de cempasúchil sobre una base de yeso plateada' },
 };
+
+// Temporadas cuyo hero es un carrusel: primero la portada de la temporada y
+// luego sus piezas destacadas que tienen foto. Agrega una clave para activarlo.
+const conCarrusel: ClaveTemporada[] = ['muertos'];
+
+interface Diapositiva {
+  titulo: [string, string];
+  texto: string;
+  foto?: Foto;
+  /** Nombre de la pieza, para el botón de cotizar; la portada no lleva. */
+  producto?: string;
+}
+
+const diapositivasDe = (t: Temporada): Diapositiva[] => {
+  const portada: Diapositiva = { titulo: t.frase, texto: t.descripcion, foto: fotos[t.clave] };
+  if (!conCarrusel.includes(t.clave)) return [portada];
+  const piezas = t.destacados
+    .map(productoPorId)
+    .filter((p) => p.foto)
+    .map((p): Diapositiva => {
+      const [primera, ...resto] = p.nombre.split(' ');
+      return { titulo: [primera, resto.join(' ')], texto: p.frase, foto: p.foto, producto: p.nombre };
+    });
+  return [portada, ...piezas];
+};
 ---
 
-{temporadas.map((t) => (
-  <section data-solo={t.clave} class="contenedor grid items-center gap-10 pt-8 pb-14 md:grid-cols-[1fr_minmax(0,560px)] md:gap-16 md:pt-16 md:pb-24">
-    <div class="order-2 flex flex-col gap-6 md:order-1 md:gap-7">
-      <p class="flex items-center gap-3">
-        <span class="text-accent"><Icono nombre={t.clave} tamano={26} /></span>
-        <span class="nota">{t.clave === 'general' ? 'hecho con cariño' : 'nueva temporada'}</span>
-      </p>
-      <h1 class="text-[54px] leading-[0.95] md:text-[88px]">
-        {t.frase[0]}<br />
-        <em class="text-accent-texto">{t.frase[1]}</em>
-      </h1>
-      <p class="max-w-[480px] text-base leading-relaxed opacity-80 md:text-lg">{t.descripcion}</p>
-      <div class="flex flex-col gap-4 sm:flex-row">
-        <Boton href="/productos">Ver productos</Boton>
-        <Boton href="#contacto" variante="secundario" icono="flecha-abajo">Contáctanos</Boton>
-      </div>
-    </div>
+{temporadas.map((t) => {
+  const diapositivas = diapositivasDe(t);
+  const esCarrusel = diapositivas.length > 1;
+  // Carrusel: una tarjeta con la foto de fondo, el texto encima sobre un velo
+  // oscuro y las flechas transparentes a media altura.
+  if (esCarrusel) return (
+    <section data-solo={t.clave} class="contenedor pt-6 pb-14 md:pt-10 md:pb-24">
+      <div
+        class="carrusel-hero borde-metal relative grid aspect-[5/4] overflow-hidden rounded-[28px] min-[400px]:aspect-[4/3] sm:aspect-[16/9] md:aspect-[16/10] lg:aspect-auto lg:h-[620px]"
+        data-carrusel
+        aria-roledescription="carrusel"
+        aria-label={`${t.nombre}: piezas de temporada`}
+      >
+        {diapositivas.map((d, i) => (
+          <div
+            class="diapositiva relative flex items-end [grid-area:1/1] md:items-center"
+            data-diapositiva
+            inert={i > 0}
+            aria-roledescription="diapositiva"
+            aria-label={`${i + 1} de ${diapositivas.length}`}
+          >
+            {d.foto && (
+              <Image
+                src={d.foto.src}
+                alt={d.foto.alt}
+                widths={[640, 960, 1280, 1600]}
+                sizes="(min-width: 1440px) 1280px, 100vw"
+                loading="lazy"
+                class="absolute inset-0 size-full object-cover"
+                style={`object-position: ${d.foto.posicion ?? '50% 70%'}`}
+              />
+            )}
+            <div class="velo-hero absolute inset-0" aria-hidden="true"></div>
+            <div class="relative flex max-w-[560px] flex-col gap-3 px-5 pt-6 pb-9 text-white sm:gap-4 sm:px-10 sm:pb-12 lg:max-w-[680px] lg:gap-6 lg:px-20 lg:py-16">
+              <p class="flex items-center gap-3">
+                <span class="text-icono"><Icono nombre={t.clave} tamano={26} /></span>
+                <span class="nota text-white">{d.producto ? 'pieza de temporada' : 'nueva temporada'}</span>
+              </p>
+              {i === 0 ? (
+                <h1 class="text-[24px] leading-[0.95] min-[400px]:text-[30px] sm:text-[40px] lg:text-[72px]">
+                  {d.titulo[0]}<br />
+                  <em class="text-soft">{d.titulo[1]}</em>
+                </h1>
+              ) : (
+                <h2 class="text-[24px] leading-[0.95] min-[400px]:text-[30px] sm:text-[40px] lg:text-[72px]">
+                  {d.titulo[0]}<br />
+                  <em class="text-soft">{d.titulo[1]}</em>
+                </h2>
+              )}
+              <p class="hidden text-base leading-relaxed md:block lg:text-lg">{d.texto}</p>
+              <div class="flex flex-wrap gap-2 sm:gap-4">
+                {d.producto ? (
+                  <>
+                    <Boton href={enlaceWhatsApp(mensajeProducto(d.producto))} externo compacto>Cotizar por WhatsApp</Boton>
+                    <Boton href="/productos" variante="secundario" compacto class="max-[399px]:hidden">Ver productos</Boton>
+                  </>
+                ) : (
+                  <>
+                    <Boton href="/productos" compacto>Ver productos</Boton>
+                    <Boton href="#contacto" variante="secundario" icono="flecha-abajo" compacto class="max-[399px]:hidden">Contáctanos</Boton>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
 
-    <div class="relative order-1 md:order-2">
-      {fotos[t.clave] ? (
-        <div class="papel relative aspect-[5/6] overflow-hidden rounded-t-full rounded-b-[24px] bg-soft max-md:mx-auto max-md:w-[82%]">
-          <!-- lazy: las fotos de las temporadas ocultas (display:none) no se descargan. -->
-          <Image
-            src={fotos[t.clave]!.src}
-            alt={fotos[t.clave]!.alt}
-            widths={[400, 560, 800, 1120]}
-            sizes="(min-width: 768px) 560px, 82vw"
-            loading="lazy"
-            class="size-full object-cover object-[50%_70%]"
-          />
+        {t.clave === 'muertos' && (
+          <FlorCempasuchil tam={64} class="flor-hero absolute top-3 right-3 z-10 max-md:size-11 md:top-6 md:right-6" />
+        )}
+
+        <button type="button" data-anterior aria-label="Diapositiva anterior" class="flecha-hero absolute top-1/2 left-5 z-10">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+        </button>
+        <button type="button" data-siguiente aria-label="Diapositiva siguiente" class="flecha-hero absolute top-1/2 right-5 z-10">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+        </button>
+        <div class="carrusel-controles absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center">
+          {diapositivas.map((_, i) => (
+            <button type="button" data-punto={i} aria-label={`Ir a la diapositiva ${i + 1}`} aria-current={i === 0 ? 'true' : undefined} class="group p-1.5">
+              <span class="block h-2 w-2 rounded-full bg-white/50 transition-all duration-300 group-aria-[current=true]:w-6 group-aria-[current=true]:bg-white"></span>
+            </button>
+          ))}
         </div>
-      ) : (
-        <div class="papel relative aspect-[5/6] overflow-hidden rounded-t-full rounded-b-[24px] bg-soft max-md:mx-auto max-md:w-[82%]" role="img" aria-label="Productos destacados de la temporada">
-          <span class="absolute inset-x-[10%] top-[18%] aspect-square rounded-full bg-accent opacity-20 blur-2xl"></span>
-          <Ilustracion tipo="pilar" class="absolute top-[26%] left-[30%] w-[48%] opacity-85" />
-          <Ilustracion tipo="frasco" class="absolute top-[52%] left-[4%] w-[40%] opacity-85" />
-          <Ilustracion tipo="figurilla" class="absolute top-[56%] left-[58%] w-[36%] opacity-85" />
-        </div>
-      )}    </div>
-  </section>
-))}
+      </div>
+    </section>
+  );
+
+  return (
+    <section data-solo={t.clave} class="contenedor pt-8 pb-14 md:pt-16 md:pb-24">
+      <div class="grid">
+        {diapositivas.map((d, i) => (
+          <div class="grid items-center gap-10 md:grid-cols-[1fr_minmax(0,560px)] md:gap-16">
+            <div class="order-2 flex flex-col gap-6 md:order-1 md:gap-7">
+              <p class="flex items-center gap-3">
+                <span class="text-icono"><Icono nombre={t.clave} tamano={26} /></span>
+                <span class="nota">
+                  {d.producto ? 'pieza de temporada' : t.clave === 'general' ? 'hecho con cariño' : 'nueva temporada'}
+                </span>
+              </p>
+              {i === 0 ? (
+                <h1 class="text-[54px] leading-[0.95] md:text-[88px]">
+                  {d.titulo[0]}<br />
+                  <em class="text-accent-texto">{d.titulo[1]}</em>
+                </h1>
+              ) : (
+                <h2 class="text-[54px] leading-[0.95] md:text-[88px]">
+                  {d.titulo[0]}<br />
+                  <em class="text-accent-texto">{d.titulo[1]}</em>
+                </h2>
+              )}
+              <p class="max-w-[480px] text-base leading-relaxed md:text-lg">{d.texto}</p>
+              <div class="flex flex-col gap-4 sm:flex-row">
+                {d.producto ? (
+                  <>
+                    <Boton href={enlaceWhatsApp(mensajeProducto(d.producto))} externo>Cotizar por WhatsApp</Boton>
+                    <Boton href="/productos" variante="secundario">Ver productos</Boton>
+                  </>
+                ) : (
+                  <>
+                    <Boton href="/productos">Ver productos</Boton>
+                    <Boton href="#contacto" variante="secundario" icono="flecha-abajo">Contáctanos</Boton>
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div class="relative order-1 md:order-2">
+              {d.foto ? (
+                <div class="borde-metal relative aspect-[5/6] overflow-hidden rounded-t-full rounded-b-[24px] bg-soft max-md:mx-auto max-md:w-[82%]">
+                  <!-- lazy: las fotos de las temporadas ocultas (display:none) no se descargan. -->
+                  <Image
+                    src={d.foto.src}
+                    alt={d.foto.alt}
+                    widths={[400, 560, 800, 1120]}
+                    sizes="(min-width: 768px) 560px, 82vw"
+                    loading="lazy"
+                    class="size-full object-cover"
+                    style={`object-position: ${d.foto.posicion ?? '50% 70%'}`}
+                  />
+                </div>
+              ) : (
+                <div class="borde-metal relative aspect-[5/6] overflow-hidden rounded-t-full rounded-b-[24px] bg-soft max-md:mx-auto max-md:w-[82%]" role="img" aria-label="Productos destacados de la temporada">
+                  <span class="absolute inset-x-[10%] top-[18%] aspect-square rounded-full bg-accent opacity-20 blur-2xl"></span>
+                  <Ilustracion tipo="pilar" class="absolute top-[26%] left-[30%] w-[48%] opacity-85" />
+                  <Ilustracion tipo="frasco" class="absolute top-[52%] left-[4%] w-[40%] opacity-85" />
+                  <Ilustracion tipo="figurilla" class="absolute top-[56%] left-[58%] w-[36%] opacity-85" />
+                </div>
+              )}
+              {t.clave === 'muertos' && (
+                <FlorCempasuchil tam={76} class="flor-hero absolute -top-6 right-[4%] z-10 md:-top-8 md:-right-6" />
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </section>
+  );
+})}
+
+<script>
+  import { iniciarCarruseles } from '../scripts/carrusel';
+  iniciarCarruseles();
+</script>

@@ -87,6 +87,7 @@ export interface Paleta {
   ink: string;
   accent: string;
   accentTexto: string;
+  tope?: string;
 }
 
 /**
@@ -94,8 +95,17 @@ export interface Paleta {
  * temporada no pinta toda la página: el fondo es casi blanco (20% del pastel)
  * y el pastel puro queda para los bloques `--soft` (tarjetas, secciones).
  */
-export function paleta(colores: { bg: string; ink: string; accent: string }): Paleta {
+export function paleta(colores: { bg: string; ink: string; accent: string; tope?: string }): Paleta {
   const bg = aHex(mezclar(aRgb(colores.bg), [255, 255, 255], 0.2));
   const soft = colores.bg.toLowerCase();
-  return { bg, soft, ink: colores.ink, accent: colores.accent, accentTexto: acentoTexto(colores.accent, colores.ink, [bg, soft]) };
+  // El tope del degradado de fondo también lleva texto (el hero), así que cuenta para el contraste.
+  const fondos = colores.tope ? [bg, soft, colores.tope] : [bg, soft];
+  return {
+    bg,
+    soft,
+    ink: colores.ink,
+    accent: colores.accent,
+    accentTexto: acentoTexto(colores.accent, colores.ink, fondos),
+    tope: colores.tope,
+  };
 }

@@ -19,6 +19,17 @@
   --accent: #f3a6df;
   --accent-texto: #783569;
   --line: color-mix(in srgb, var(--ink) 14%, var(--bg));
+  /* Rosa metálico: el rosa de la marca un poco más profundo, en un solo tono. */
+  --borde-tema: #c27ba8;
+  /* Coral de la marca aclarado (45% sobre blanco): el salmón del degradado de fondo. */
+  --salmon-claro: #facdce;
+  /* Bolitas del fondo. */
+  --puntos: rgb(194 123 168 / 0.22);
+  /* Bordes, bolitas, íconos y hovers: valores de "general"; cada temporada los cambia (temporadas.ts → tema). */
+  --icono: #c27ba8;
+  --hover: #f3a6df;
+  --hover-texto: var(--ink);
+  --hover-borde: #a65e8e;
 }
 
 @theme inline {
@@ -28,6 +39,9 @@
   --color-accent-texto: var(--accent-texto);
   --color-line: var(--line);
   --color-soft: var(--soft);
+  --color-icono: var(--icono);
+  --color-hover: var(--hover);
+  --color-hover-texto: var(--hover-texto);
   --color-whatsapp: #25d366;
 
   /* Paleta de la marca, fija en todas las temporadas. */
@@ -50,6 +64,15 @@
   }
   body {
     @apply bg-bg text-ink font-sans antialiased;
+    /*
+     * Degradado de arriba a abajo: salmón → rosa pastel → rosa pastel claro,
+     * con bolitas rosas muy tenues encima. Todos los tonos son más claros que
+     * --soft, que ya cumple contraste, así que el texto se lee en cualquier punto.
+     */
+    background-image:
+      radial-gradient(var(--puntos) 1.2px, transparent 1.7px),
+      linear-gradient(180deg, var(--salmon-claro) 0%, color-mix(in srgb, var(--soft) 50%, var(--bg)) 50%, var(--bg) 100%);
+    background-size: 22px 22px, 100% 100%;
   }
   h1, h2, h3, .font-display {
     @apply font-display;
@@ -85,6 +108,20 @@
   .papel-vivo:hover {
     border-color: var(--ink);
   }
+
+  /* Borde rosa metálico, sin fondo de color. */
+  .borde-metal {
+    border: 2px solid var(--borde-tema);
+    background-color: var(--bg);
+  }
+  /* En tarjetas y botones clicables, el borde se oscurece un poco al pasar el mouse. */
+  .borde-metal.papel-vivo:hover {
+    border-color: var(--hover-borde);
+  }
+  /* Solo la línea de arriba, para bloques a todo lo ancho como el footer. */
+  .linea-metal {
+    border-top: 2px solid var(--borde-tema);
+  }
 }
 
 /* ---------- Aparecer al hacer scroll ---------- */
@@ -107,6 +144,162 @@ html.js .revelar.visible { opacity: 1; transform: none; }
   100% { transform: scale(1.04, 0.94); }
 }
 
+/* ---------- Hero en carrusel (ver scripts/carrusel.ts) ---------- */
+/* Todas las diapositivas ocupan la misma celda; la inactiva (inert) se desvanece. */
+.diapositiva { transition: opacity 0.7s ease, visibility 0.7s; }
+.diapositiva[inert] { opacity: 0; visibility: hidden; }
+/* Sin JavaScript solo se ve la portada; las flechas y puntos no harían nada. */
+html:not(.js) .carrusel-controles,
+html:not(.js) .flecha-hero { display: none; }
+/*
+ * Velo oscuro (color de la tinta de la temporada) sobre la foto, para que el
+ * texto blanco se lea: desde abajo en celular, desde la izquierda en pantalla grande.
+ */
+.velo-hero {
+  background: linear-gradient(
+    0deg,
+    color-mix(in srgb, var(--ink) 88%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 70%, transparent) 50%,
+    transparent 85%
+  );
+}
+@media (min-width: 768px) {
+  .velo-hero {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--ink) 85%, transparent) 0%,
+      color-mix(in srgb, var(--ink) 65%, transparent) 45%,
+      transparent 75%
+    );
+  }
+}
+/* Flechas transparentes, como vidrio, a media altura de la tarjeta. */
+.flecha-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgb(255 255 255 / 0.45);
+  background: rgb(255 255 255 / 0.12);
+  color: #fff;
+  backdrop-filter: blur(4px);
+  transition: background-color 0.2s ease;
+  translate: 0 -50%;
+}
+.flecha-hero:hover { background: rgb(255 255 255 / 0.28); }
+/* En celular y tablet se cambia deslizando con el dedo: sin flechas. */
+@media (max-width: 1023px) {
+  .flecha-hero { display: none; }
+}
+/* El navegador sigue haciendo scroll vertical; el deslizamiento horizontal es del carrusel. */
+.carrusel-hero { touch-action: pan-y; }
+
+/* ---------- Tarjetas que entran en cascada (ver scripts/revelar.ts) ---------- */
+/* Incluye border-color y color para no perder las transiciones de hover de las tarjetas. */
+html.js .tarjeta-anim {
+  opacity: 0;
+  transform: translateY(24px) scale(0.97);
+  transition:
+    opacity 0.6s var(--ease-papel) var(--retraso-anim, 0ms),
+    transform 0.6s var(--ease-papel) var(--retraso-anim, 0ms),
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+html.js .tarjeta-anim.visible { opacity: 1; transform: none; }
+
+/* ---------- Partículas de temporada (ver components/Particulas.astro) ---------- */
+.particulas {
+  position: fixed;
+  inset: 0;
+  z-index: 20; /* encima del contenido, debajo del menú (z-30) */
+  overflow: hidden;
+  pointer-events: none;
+}
+.particula {
+  position: absolute;
+  top: -5%;
+  left: var(--izq);
+  opacity: 0.6;
+  /* translate y rotate van por separado para combinar caída, vaivén y giro. */
+  animation:
+    caer var(--duracion) linear var(--retraso) infinite,
+    girar-particula calc(var(--duracion) / 2) linear var(--retraso) infinite;
+}
+.particula svg { display: block; }
+@keyframes caer {
+  0% { translate: 0 0; }
+  25% { translate: 3vw 28vh; }
+  50% { translate: -2vw 56vh; }
+  75% { translate: 3vw 84vh; }
+  100% { translate: 0 112vh; }
+}
+@keyframes subir {
+  0% { translate: 0 0; }
+  50% { translate: 2vw -56vh; }
+  100% { translate: 0 -112vh; }
+}
+@keyframes girar-particula { to { rotate: 360deg; } }
+
+/* Pétalo u hoja: medio óvalo con puntas. */
+.particula-petalo {
+  width: var(--tam);
+  height: calc(var(--tam) * 1.4);
+  background: var(--color);
+  border-radius: 80% 0 80% 0;
+  opacity: 0.55;
+}
+/* Copo de nieve: punto blanco con un contorno azul tenue para verse sobre fondo claro. */
+.particula-copo {
+  width: var(--tam);
+  height: var(--tam);
+  border-radius: 50%;
+  background: var(--color);
+  box-shadow: 0 0 0 1px rgb(60 110 150 / 0.25), 0 0 6px rgb(255 255 255 / 0.9);
+  opacity: 0.9;
+  animation-name: caer, none;
+}
+.particula-confeti {
+  width: calc(var(--tam) * 0.6);
+  height: var(--tam);
+  border-radius: 1px;
+  background: var(--color);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06);
+  opacity: 0.75;
+}
+.particula-cempasuchil { opacity: 0.7; }
+.particula-baston,
+.particula-corazon,
+.particula-flor,
+.particula-estrella { opacity: 0.65; }
+/* Burbuja: aro que sube despacio desde abajo. */
+.particula-burbuja {
+  top: auto;
+  bottom: -5%;
+  width: calc(var(--tam) * 1.6);
+  height: calc(var(--tam) * 1.6);
+  border: 1.5px solid var(--color);
+  border-radius: 50%;
+  opacity: 0.45;
+  animation-name: subir, none;
+}
+
+/* Flor del hero: se abre al cargar y luego se mece despacio. */
+.flor-hero {
+  animation:
+    florecer 1.4s var(--ease-papel) both,
+    mecer 6s ease-in-out 1.4s infinite alternate;
+}
+@keyframes florecer {
+  from { scale: 0.2; rotate: -120deg; opacity: 0; }
+  to { scale: 1; rotate: 0deg; opacity: 1; }
+}
+@keyframes mecer {
+  from { rotate: -6deg; }
+  to { rotate: 6deg; }
+}
+
 /* ---------- Carrusel en celular ---------- */
 .carrusel {
   scroll-snap-type: x mandatory;
@@ -116,6 +309,9 @@ html.js .revelar.visible { opacity: 1; transform: none; }
 .carrusel > * { scroll-snap-align: start; }
 
 @media (prefers-reduced-motion: reduce) {
+  .particulas { display: none; }
+  .flor-hero { animation: none; }
+  html.js .tarjeta-anim { opacity: 1; transform: none; transition: none; }
   .flama { animation: none; }
   html.js .revelar { opacity: 1; transform: none; transition: none; }
   html { scroll-behavior: auto; }

@@ -31,19 +31,19 @@ const filtrosTemporada = [
   <!-- Temporada actual destacada -->
   <div class="contenedor pb-12 md:pb-24">
     {temporadas.map((t) => (
-      <section data-solo={t.clave} class="papel flex flex-col gap-6 overflow-hidden rounded-[28px] bg-soft py-7 pl-5 md:gap-9 md:p-12">
+      <section data-solo={t.clave} class="borde-metal flex flex-col gap-6 overflow-hidden rounded-[28px] py-7 pl-5 md:gap-9 md:py-10 md:pl-10 lg:p-12">
         <div class="flex items-center gap-3 md:gap-5">
-          <span class="text-accent"><Icono nombre={t.clave} tamano={48} /></span>
+          <span class="text-icono"><Icono nombre={t.clave} tamano={48} /></span>
           <div class="flex flex-col gap-1.5">
-            <p class="etiqueta">{t.clave === 'general' ? 'Todo el año' : `Temporada actual · ${t.nombre}`}</p>
+            <p class="etiqueta">{t.clave === 'general' ? 'Todo el año' : `Temporada · ${t.nombre}`}</p>
             <h2 class="text-[26px] leading-tight md:text-[52px]">
               {t.tituloBloque[0]} <em>{t.tituloBloque[1]}</em>
             </h2>
           </div>
         </div>
-        <div class="carrusel flex gap-4 overflow-x-auto pt-1 pr-5 pb-3 md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:pr-0">
+        <div class="carrusel flex gap-5 overflow-x-auto pt-1 pr-5 pb-3 md:pr-10 lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-visible lg:pr-0">
           {t.destacados.map((id) => (
-            <TarjetaProducto producto={productoPorId(id)} class="w-[72%] shrink-0 md:w-auto" />
+            <TarjetaProducto producto={productoPorId(id)} compacta class="w-[calc(50%-10px)] shrink-0 lg:w-auto" />
           ))}
         </div>
       </section>
@@ -65,7 +65,7 @@ const filtrosTemporada = [
                 data-filtro={f.grupo}
                 data-valor={o.valor}
                 aria-pressed={i === 0 ? 'true' : 'false'}
-                class="shrink-0 rounded-full border-[1.5px] border-ink px-[18px] py-2 text-[15px] whitespace-nowrap transition-colors hover:text-accent-texto aria-pressed:bg-ink aria-pressed:text-bg aria-pressed:hover:text-bg"
+                class="shrink-0 rounded-full border-[1.5px] border-ink px-[18px] py-2 text-[15px] whitespace-nowrap transition-colors hover:border-hover hover:bg-hover hover:text-hover-texto aria-pressed:bg-ink aria-pressed:text-bg aria-pressed:hover:border-ink aria-pressed:hover:bg-ink aria-pressed:hover:text-bg"
               >
                 {o.texto}
               </button>
@@ -75,8 +75,8 @@ const filtrosTemporada = [
       ))}
     </div>
 
-    <div class="grid gap-7 sm:grid-cols-2 lg:grid-cols-4" data-rejilla>
-      {productos.map((p) => <TarjetaProducto producto={p} conTemporada />)}
+    <div class="grid gap-5 sm:grid-cols-2 md:gap-8 lg:grid-cols-3" data-rejilla>
+      {productos.map((p) => <TarjetaProducto producto={p} />)}
     </div>
     <p class="hidden py-10 text-center opacity-70" data-vacio>
       No hay piezas con esos filtros. Escríbenos por WhatsApp y te contamos qué tenemos.

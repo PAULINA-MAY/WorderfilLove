@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import BotonFlotante from '../components/BotonFlotante.astro';
+import Particulas from '../components/Particulas.astro';
 import { claveParaFecha, rangosPlanos, temporadas } from '../data/temporadas';
 import { paleta } from '../data/contraste';
 import { sitio } from '../data/sitio';
@@ -17,11 +18,15 @@ const tituloCompleto = titulo ? `${titulo} · ${sitio.nombre}` : `${sitio.nombre
 
 const claves = temporadas.map((t) => t.clave);
 
-// Paleta de cada temporada y regla para ocultar el contenido de las que no tocan.
+// Paleta y tema de cada temporada, y regla para ocultar el contenido de las que no tocan.
 const cssTemporadas = temporadas
   .map((t) => {
     const p = paleta(t.colores);
-    return `html[data-temporada="${t.clave}"]{--bg:${p.bg};--soft:${p.soft};--ink:${p.ink};--accent:${p.accent};--accent-texto:${p.accentTexto}}`;
+    const tope = p.tope ? `;--salmon-claro:${p.tope}` : '';
+    const tema = t.tema
+      ? `;--borde-tema:${t.tema.borde};--puntos:${t.tema.puntos};--icono:${t.tema.icono};--hover:${t.tema.hover};--hover-texto:${t.tema.hoverTexto};--hover-borde:${t.tema.hoverBorde}`
+      : '';
+    return `html[data-temporada="${t.clave}"]{--bg:${p.bg};--soft:${p.soft};--ink:${p.ink};--accent:${p.accent};--accent-texto:${p.accentTexto}${tope}${tema}}`;
   })
   .join('');
 const cssSolo = claves
@@ -68,6 +73,7 @@ h.dataset.temporada=c;h.classList.add('js');
     </main>
     <Footer />
     <BotonFlotante />
+    <Particulas />
 
     <script>
       import { iniciarRevelar } from '../scripts/revelar';

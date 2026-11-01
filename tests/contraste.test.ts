@@ -10,11 +10,20 @@ describe('contraste', () => {
 
 describe('paleta', () => {
   it.each(temporadas.map((t) => [t.clave, paleta(t.colores)] as const))('%s se lee en fondo y bloques', (_, p) => {
-    for (const fondo of [p.bg, p.soft]) {
+    for (const fondo of [p.bg, p.soft, ...(p.tope ? [p.tope] : [])]) {
       expect(contraste(p.ink, fondo)).toBeGreaterThanOrEqual(CONTRASTE_TEXTO);
       expect(contraste(p.accentTexto, fondo)).toBeGreaterThanOrEqual(CONTRASTE_TEXTO);
     }
   });
+});
+
+describe('tema', () => {
+  it.each(temporadas.filter((t) => t.tema).map((t) => [t.clave, t.tema!] as const))(
+    '%s: el texto de los botones se lee al pasar el mouse',
+    (_, tema) => {
+      expect(contraste(tema.hoverTexto, tema.hover)).toBeGreaterThanOrEqual(CONTRASTE_TEXTO);
+    },
+  );
 });
 
 describe('acentoTexto', () => {
