@@ -6,9 +6,9 @@ export const resenas = [
     producto: 'Vela Canela & Clavo',
   },
   {
-    texto: 'La calaverita quedó perfecta en nuestro altar de Hanal Pixán. Se nota que está hecha a mano.',
+    texto: 'La vela de cruz y calabaza quedó perfecta en nuestro altar de Hanal Pixán. Se nota que está hecha a mano.',
     autor: 'Jorge P. · Progreso',
-    producto: 'Calaverita de Yeso',
+    producto: 'Vela Cruz y Calabaza',
   },
   {
     texto: 'Pregunté por WhatsApp y en dos días ya tenía mi regalo envuelto. Atención de diez.',
