@@ -7,7 +7,7 @@ export const sitio = {
   whatsappVisible: '999 413 0668',
   facebook: 'https://facebook.com/wonderfullove.mx',
   facebookVisible: '/wonderfullove.mx',
-  correo: 'hola@wonderfullove.mx',
+  correo: 'hola  ',
   direccion: 'Calle 43 x 18 y 20 Roble agricola, Mérida, Yucatán, México , 376 A',
   horario: 'Lunes a sábado · 10:00 a 19:00',
   mapa: 'https://maps.google.com/?q=Calle+43+x+18+y+20+Roble+Agricola,+Mérida,+Yucatán,+México,+376+A',
